@@ -22,6 +22,21 @@ function onInit() {
     .catch(() => console.log('Error: cannot init map'));
 }
 
+function getWeather(lat = 3.1, lng = 3.1) {
+  return axios
+    .get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${3.1}&lon=${3.1}&appid=7f39afb3e8f5aa7214049415f30eabb1`
+    )
+    .then(res => res.data.weather[0].description)
+    .then(onGetWeather)
+    .catch(err => console.log(err));
+}
+
+console.log(getWeather());
+function onGetWeather(weather) {
+  return weather;
+}
+
 function setMapCenter() {
   var link = location.href;
   var str = link.substring(link.indexOf('?') + 1);
@@ -51,6 +66,7 @@ function onPlace(map) {
       },
       createdAt: utils.getTime(Date.now()),
       updatedAt: 0,
+      wethear: 0,
     };
     mapService.savePlace(place);
     renderPlaces();
@@ -66,9 +82,12 @@ function renderPlaces() {
     <li>
         <p>${place.name}</p>
         <p>${place.createdAt}</p>
+        <div>
         <button onclick="onRemovePlace('${place.id}')">X</button>
         <button onclick="onPanTo('${place.position.lat}','${place.position.lng}')">Go</button>
-    </li>`;
+        </div>
+    
+        </li>`;
     })
     .join('');
   document.querySelector('.places-table').innerHTML = strHTMLs;
