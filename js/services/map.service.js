@@ -8,6 +8,7 @@ export const mapService = {
   removePlace,
   showLocation,
   getCenter,
+  // getWeather,
 };
 
 const PLACES_KEY = 'placesDB';
@@ -26,8 +27,11 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
     return gMap;
   });
 }
-
-function setCenter(positon) {}
+// function getWeather(lat = 3.1, lng=3.1) {
+//   axios.get(`api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=7f39afb3e8f5aa7214049415f30eabb1`)
+//   .then(res => console.log(res.data))
+//   .catch(err => console.log(err))
+// }
 
 function getCenter() {
   //   console.log(gMap.getCenter().lat());
