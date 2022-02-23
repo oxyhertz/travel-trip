@@ -5,6 +5,7 @@ export const mapService = {
   panTo,
   savePlace,
   getPlaces,
+  removePlace,
 };
 
 const PLACES_KEY = 'placesDB';
@@ -24,6 +25,20 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
     return gMap;
   });
 }
+
+function removePlace(id){
+  var idx = gPlaces.findIndex(place => place.id === id)
+  gPlaces.splice(idx , 1)
+  storage.save(PLACES_KEY, gPlaces);
+}
+
+// function getPlace(id) {
+//   var place = gPlaces.find(place => place.id === id)
+//   return {
+//     lat: place.lat,
+//     lng: place.lan,
+//   }
+// }
 
 function getPlaces() {
   return gPlaces;
