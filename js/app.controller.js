@@ -8,7 +8,7 @@ window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onRemovePlace = onRemovePlace;
-
+window.onUserLocation = onUserLocation;
 function onInit() {
   mapService
     .initMap()
@@ -21,7 +21,6 @@ function onInit() {
 function onRemovePlace(id) {
   mapService.removePlace(id);
   renderPlaces();
-  renderMarkers();
 }
 
 function onPlace(map) {
@@ -38,7 +37,7 @@ function onPlace(map) {
     };
     mapService.savePlace(place);
     renderPlaces();
-    renderMarkers();
+    onAddMarker(place.position);
   });
 }
 
@@ -46,7 +45,6 @@ function renderPlaces() {
   var places = mapService.getPlaces();
   var strHTMLs = places
     .map(place => {
-      //   mapService.addMarker(place.position);
       return `
     <li>
         <p>${place.name}</p>
@@ -67,9 +65,9 @@ function getPosition() {
   });
 }
 
-function onAddMarker() {
+function onAddMarker(position) {
   console.log('Adding a marker');
-  mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
+  mapService.addMarker(position);
 }
 
 function onGetLocs() {
@@ -82,6 +80,7 @@ function onGetLocs() {
 function onGetUserPos() {
   getPosition()
     .then(pos => {
+      console.log(pos.coords.latitude);
       console.log('User position is:', pos.coords);
       document.querySelector(
         '.user-pos'
@@ -93,14 +92,31 @@ function onGetUserPos() {
 }
 
 function renderMarkers() {
-  console.log('hi');
   const places = mapService.getPlaces();
   places.forEach(({ position }) => {
     mapService.addMarker(position);
   });
 }
 
-function onPanTo(lat, lng) {
+function onPanTo(lat = 35.6895, lng = 139.6917) {
   console.log('Panning the Map');
   mapService.panTo(lat, lng);
 }
+
+function onUserLocation() {
+  getPosition().then(mapService.showLocation);
+}
+
+function geocode() {
+  var location = 'Brooklyn';
+  axios
+    .get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address: location,
+        key: 'AIzaSyCv9mke4qM6dFwfae-VsXNlKlW2Mnk4kBk',
+      },
+    })
+    .then(rep => console.log(rep.data));
+}
+
+geocode();

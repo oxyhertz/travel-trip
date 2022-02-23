@@ -6,13 +6,14 @@ export const mapService = {
   savePlace,
   getPlaces,
   removePlace,
+  showLocation,
 };
 
 const PLACES_KEY = 'placesDB';
 const MARKERS_KEY = 'markersDB';
 var gMap;
 var gPlaces = storage.load(PLACES_KEY) || [];
-var gMarkers = storage.load(MARKERS_KEY) || [];
+var gMarkers = [];
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
   console.log('InitMap');
@@ -33,13 +34,22 @@ function removePlace(id) {
     return place.id === id;
   });
   gPlaces.splice(idx, 1);
-  removeMarker(idx);
   storage.save(PLACES_KEY, gPlaces);
+  removeMarker(idx);
 }
 
 function removeMarker(idx) {
+  console.log(idx);
   gMarkers[idx].setMap(null);
   gMarkers.splice(idx, 1);
+  console.log(gMarkers);
+}
+
+function showLocation(position) {
+  gMap.setCenter({
+    lat: position.coords.latitude,
+    lng: position.coords.longitude,
+  });
 }
 
 // function getPlace(id) {
@@ -61,16 +71,13 @@ function savePlace(place) {
 }
 
 function addMarker(loc) {
-  console.log(loc);
   var marker = new google.maps.Marker({
     position: loc,
     map: gMap,
     title: 'Hello World!',
-    // animation: google.maps.Animation.DROP,
+    animation: google.maps.Animation.DROP,
   });
-  console.log('hi');
   gMarkers.push(marker);
-  console.log(gMarkers);
   return marker;
 }
 
