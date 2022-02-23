@@ -9,6 +9,8 @@ window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onRemovePlace = onRemovePlace;
 window.onUserLocation = onUserLocation;
+window.Onsearch = Onsearch;
+
 function onInit() {
   mapService
     .initMap()
@@ -107,16 +109,19 @@ function onUserLocation() {
   getPosition().then(mapService.showLocation);
 }
 
-function geocode() {
-  var location = 'Brooklyn';
+function geocode(val) {
   axios
     .get('https://maps.googleapis.com/maps/api/geocode/json', {
       params: {
-        address: location,
+        address: val,
         key: 'AIzaSyCv9mke4qM6dFwfae-VsXNlKlW2Mnk4kBk',
       },
     })
-    .then(rep => console.log(rep.data));
+    .then(res => res.data.results[0].geometry.location)
+    .then(res => onPanTo(res.lat,res.lng))
 }
 
-geocode();
+function Onsearch(){
+  var val = document.querySelector('input').value
+  geocode(val)// onPlace(map)
+}
