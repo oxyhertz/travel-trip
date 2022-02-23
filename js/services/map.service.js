@@ -27,8 +27,6 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
   });
 }
 
-function setCenter(positon) {}
-
 function getCenter() {
   //   console.log(gMap.getCenter().lat());
   return {
