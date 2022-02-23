@@ -13,14 +13,15 @@ function onInit() {
   mapService
     .initMap()
     .then(onPlace)
+    .then(renderPlaces)
+    .then(renderMarkers)
     .catch(() => console.log('Error: cannot init map'));
-  renderPlaces();
-  renderMarkers();
 }
 
 function onRemovePlace(id) {
   mapService.removePlace(id);
   renderPlaces();
+  renderMarkers();
 }
 
 function onPlace(map) {
@@ -37,6 +38,7 @@ function onPlace(map) {
     };
     mapService.savePlace(place);
     renderPlaces();
+    renderMarkers();
   });
 }
 
@@ -44,12 +46,12 @@ function renderPlaces() {
   var places = mapService.getPlaces();
   var strHTMLs = places
     .map(place => {
-      mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
+      //   mapService.addMarker(place.position);
       return `
     <li>
         <p>${place.name}</p>
         <p>${place.createdAt}</p>
-        <button onclick="onRemovePlace(event,'${place.id}')">X</button>
+        <button onclick="onRemovePlace('${place.id}')">X</button>
         <button onclick="onPanTo('${place.position.lat}','${place.position.lng}')">Go</button>
     </li>`;
     })
@@ -91,6 +93,7 @@ function onGetUserPos() {
 }
 
 function renderMarkers() {
+  console.log('hi');
   const places = mapService.getPlaces();
   places.forEach(({ position }) => {
     mapService.addMarker(position);

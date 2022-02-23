@@ -9,8 +9,10 @@ export const mapService = {
 };
 
 const PLACES_KEY = 'placesDB';
+const MARKERS_KEY = 'markersDB';
 var gMap;
 var gPlaces = storage.load(PLACES_KEY) || [];
+var gMarkers = storage.load(MARKERS_KEY) || [];
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
   console.log('InitMap');
@@ -27,9 +29,17 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
 }
 
 function removePlace(id) {
-  var idx = gPlaces.findIndex(place => place.id === id);
+  var idx = gPlaces.findIndex(place => {
+    return place.id === id;
+  });
   gPlaces.splice(idx, 1);
+  removeMarker(idx);
   storage.save(PLACES_KEY, gPlaces);
+}
+
+function removeMarker(idx) {
+  gMarkers[idx].setMap(null);
+  gMarkers.splice(idx, 1);
 }
 
 // function getPlace(id) {
@@ -56,8 +66,11 @@ function addMarker(loc) {
     position: loc,
     map: gMap,
     title: 'Hello World!',
-    animation: google.maps.Animation.DROP,
+    // animation: google.maps.Animation.DROP,
   });
+  console.log('hi');
+  gMarkers.push(marker);
+  console.log(gMarkers);
   return marker;
 }
 
