@@ -12,6 +12,8 @@ window.onUserLocation = onUserLocation;
 window.onSearch = onSearch;
 window.onCopy = onCopy;
 
+
+
 function onInit() {
   mapService
     .initMap()
@@ -20,8 +22,25 @@ function onInit() {
     .then(renderMarkers)
     .then(setMapCenter)
     .catch(() => console.log('Error: cannot init map'));
-}
+  }
 
+  function getWeather(lat = 3.1, lng=3.1) {
+    axios.get(`api.openweathermap.org/data/2.5/weather?lat=${3.1}&lon=${3.1}&appid=7f39afb3e8f5aa7214049415f30eabb1`)
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+
+    // fetch(`api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=7f39afb3e8f5aa7214049415f30eabb1`)
+    // .then(res => res.json())
+    // .then(data => console.log(data))
+    // .catch(err => console.log(err))
+
+  }
+
+
+
+  getWeather()
+  
+  
 function setMapCenter() {
   var link = location.href;
   var str = link.substring(link.indexOf('?') + 1);
@@ -51,11 +70,13 @@ function onPlace(map) {
       },
       createdAt: utils.getTime(Date.now()),
       updatedAt: 0,
+      
     };
     mapService.savePlace(place);
     renderPlaces();
     onAddMarker(place.position);
   });
+
 }
 
 function renderPlaces() {
