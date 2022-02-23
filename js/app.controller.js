@@ -15,9 +15,10 @@ function onInit() {
     .then(onPlace)
     .catch(() => console.log('Error: cannot init map'));
   renderPlaces();
+  renderMarkers();
 }
 
-function onRemovePlace(id){
+function onRemovePlace(id) {
   mapService.removePlace(id);
   renderPlaces();
 }
@@ -43,6 +44,7 @@ function renderPlaces() {
   var places = mapService.getPlaces();
   var strHTMLs = places
     .map(place => {
+      mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
       return `
     <li>
         <p>${place.name}</p>
@@ -50,8 +52,8 @@ function renderPlaces() {
         <button onclick="onRemovePlace(event,'${place.id}')">X</button>
         <button onclick="onPanTo('${place.position.lat}','${place.position.lng}')">Go</button>
     </li>`;
-    }).join('');
-
+    })
+    .join('');
   document.querySelector('.places-table').innerHTML = strHTMLs;
 }
 
@@ -87,6 +89,14 @@ function onGetUserPos() {
       console.log('err!!!', err);
     });
 }
+
+function renderMarkers() {
+  const places = mapService.getPlaces();
+  places.forEach(({ position }) => {
+    mapService.addMarker(position);
+  });
+}
+
 function onPanTo(lat, lng) {
   console.log('Panning the Map');
   mapService.panTo(lat, lng);
