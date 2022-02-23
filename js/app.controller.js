@@ -9,7 +9,8 @@ window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onRemovePlace = onRemovePlace;
 window.onUserLocation = onUserLocation;
-window.Onsearch = Onsearch;
+window.onSearch = onSearch;
+window.onCopy = onCopy;
 
 function onInit() {
   mapService
@@ -17,7 +18,21 @@ function onInit() {
     .then(onPlace)
     .then(renderPlaces)
     .then(renderMarkers)
+    .then(setMapCenter)
     .catch(() => console.log('Error: cannot init map'));
+}
+
+function setMapCenter() {
+  var link = location.href;
+  var str = link.substring(link.indexOf('?') + 1);
+  var usp = new URLSearchParams(str);
+  var pos = {
+    lat: +usp.get('lat'),
+    lng: +usp.get('lng'),
+  };
+  if (pos.lat === 0 && pos.lng === 0) return;
+
+  mapService.panTo(pos.lat, pos.lng);
 }
 
 function onRemovePlace(id) {
@@ -118,10 +133,18 @@ function geocode(val) {
       },
     })
     .then(res => res.data.results[0].geometry.location)
-    .then(res => onPanTo(res.lat,res.lng))
+    .then(res => onPanTo(res.lat, res.lng));
 }
 
-function Onsearch(){
-  var val = document.querySelector('input').value
-  geocode(val)// onPlace(map)
+function onSearch() {
+  var val = document.querySelector('input').value;
+  geocode(val); // onPlace(map)
+}
+
+function onCopy() {
+  var { lat, lng } = mapService.getCenter();
+  console.log(lat, lng);
+  navigator.clipboard.writeText(
+    `https://oxyhertz.github.io/travel-trip/index.html?lat=${lat}&lng=${lng}`
+  );
 }

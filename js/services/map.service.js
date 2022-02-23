@@ -7,6 +7,7 @@ export const mapService = {
   getPlaces,
   removePlace,
   showLocation,
+  getCenter,
 };
 
 const PLACES_KEY = 'placesDB';
@@ -16,17 +17,24 @@ var gPlaces = storage.load(PLACES_KEY) || [];
 var gMarkers = [];
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
-  console.log('InitMap');
-
   return _connectGoogleApi().then(() => {
     console.log('google available');
     gMap = new google.maps.Map(document.querySelector('#map'), {
       center: { lat, lng },
       zoom: 15,
     });
-    console.log('Map!', gMap);
     return gMap;
   });
+}
+
+function setCenter(positon) {}
+
+function getCenter() {
+  //   console.log(gMap.getCenter().lat());
+  return {
+    lat: gMap.getCenter().lat(),
+    lng: gMap.getCenter().lng(),
+  };
 }
 
 function removePlace(id) {

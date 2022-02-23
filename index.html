@@ -9,13 +9,14 @@
   <body>
     <header class="main-header">
       <h1>TravelTip Starter</h1>
+      <button class="copy-location" onclick="onCopy()">Copy Location</button>
     </header>
     <main class="main-content">
       <div class="places-table-container">
         <ul class="places-table"></ul>
       </div>
       <div class="map-container">
-        <input type="text"> <button onclick="Onsearch()">Search</button>
+        <input type="text" /> <button onclick="onSearch()">Search</button>
         <div id="map" style="width: 100%; height: 400px"></div>
         <button onclick="onAddMarker()" class="btn-add-marker">
           Add Marker Speific Location
