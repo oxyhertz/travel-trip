@@ -1,5 +1,6 @@
 import { locService } from './services/loc.service.js';
 import { mapService } from './services/map.service.js';
+import { utils } from './services/utils-service.js';
 
 window.onload = onInit;
 window.onAddMarker = onAddMarker;
@@ -12,22 +13,42 @@ function onInit() {
     .initMap()
     .then(onPlace)
     .catch(() => console.log('Error: cannot init map'));
+  renderPlaces();
 }
 
 function onPlace(map) {
   map.addListener('click', mapsMouseEvent => {
     var place = {
       name: prompt('Enter Location Name:'),
+      id: utils.makeId(5),
       position: {
         lat: mapsMouseEvent.latLng.lat(),
         lng: mapsMouseEvent.latLng.lng(),
       },
-      createdAt: Date.now(),
+      createdAt: utils.getTime(Date.now()),
       updatedAt: 0,
     };
-    console.log(place);
     mapService.savePlace(place);
+    renderPlaces();
   });
+}
+
+function renderPlaces() {
+  var places = mapService.getPlaces();
+  var strHTMLs = places
+    .map(place => {
+      return `
+    <li>
+        <p>${place.name}</p>
+        <p>${place.createdAt}</p>
+    </li>
+
+
+      `;
+    })
+    .join('');
+
+  document.querySelector('.places-table').innerHTML = strHTMLs;
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition

@@ -1,10 +1,10 @@
 import { storage } from './storage-service.js';
-
 export const mapService = {
   initMap,
   addMarker,
   panTo,
   savePlace,
+  getPlaces,
 };
 
 const PLACES_KEY = 'placesDB';
@@ -23,6 +23,10 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
     console.log('Map!', gMap);
     return gMap;
   });
+}
+
+function getPlaces() {
+  return gPlaces;
 }
 
 function savePlace(place) {
